@@ -25,7 +25,8 @@ class LanguagePack::Rails2
     topic "Clearing #{db_test_tasks_to_clear.join(' ')} rake tasks"
     clear_db_test_tasks
     super
-    db_prepare_test_rake_tasks
+    topic 'Precompiling and caching assets'
+    run_assets_precompile_rake_task
   end
 
   def db_test_tasks_to_clear
@@ -119,19 +120,19 @@ class LanguagePack::Rails2
   end
 
   def public_assets_folder
-    "public/assets"
+    'public/assets'
   end
 
   def public_packs_folder
-    "public/packs"
+    'public/packs'
   end
 
   def public_packs_test_folder
-    "public/packs-test"
+    'public/packs-test'
   end
 
   def default_assets_cache
-    "tmp/cache/assets"
+    'tmp/cache/assets'
   end
 
   def node_modules_folder
