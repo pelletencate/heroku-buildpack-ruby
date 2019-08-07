@@ -26,7 +26,7 @@ class LanguagePack::Rails2
     clear_db_test_tasks
     super
     topic 'Precompiling and caching assets'
-    run_assets_precompile_rake_task
+    cache_and_run_assets_precompile_rake_task
   end
 
   def db_test_tasks_to_clear
@@ -79,7 +79,7 @@ class LanguagePack::Rails2
     [schema_load, structure_load, db_migrate]
   end
 
-  def run_assets_precompile_rake_task
+  def cache_and_run_assets_precompile_rake_task
     instrument 'rails5.run_assets_precompile_rake_task' do
       log('assets_precompile') do
         if Dir.glob('public/assets/{.sprockets-manifest-*.json,manifest-*.json}', File::FNM_DOTMATCH).any?
@@ -92,7 +92,7 @@ class LanguagePack::Rails2
 
         topic('Preparing app for Rails asset pipeline')
 
-        assets_folders.each { |a| @cache.load_without_overwrite a }
+        assets_folders.each { |a| @cache.load a }
         @cache.load default_assets_cache
 
         precompile.invoke(env: rake_env)
