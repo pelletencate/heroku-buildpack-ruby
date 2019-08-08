@@ -1,5 +1,7 @@
-require "pathname"
-require "language_pack"
+# frozen_string_literal: true
+
+require 'pathname'
+require 'language_pack'
 
 # Manipulates/handles contents of the cache directory
 class LanguagePack::Cache
@@ -22,36 +24,41 @@ class LanguagePack::Cache
   # @param [String] path of contents to store. it will be stored using this a relative path from the cache_base.
   # @param [String] relative path to store the cache contents, if nil it will assume the from path
   def store(from, path = nil)
+    print "Storing to cache: #{from}... "
     path ||= from
     clear path
-    copy from, (@cache_base + path)
+    puts copy(from, @cache_base + path) ? 'Done' : 'Skipped (not found)'
   end
 
   # Adds file to cache without clearing the destination
   # Use LanguagePack::Cache#store to avoid accidental cache bloat
   def add(from, path = nil)
+    print "Adding to cache: #{from}... "
     path ||= from
-    copy from, (@cache_base + path)
+    puts copy(from, @cache_base + path) ? 'Done' : 'Skipped (not found)'
   end
 
   # load cache contents
   # @param [String] relative path of the cache contents
   # @param [String] path of where to store it locally, if nil, assume same relative path as the cache contents
   def load(path, dest = nil)
+    print "Loading from cache: #{path}... "
     dest ||= path
-    copy (@cache_base + path), dest
+    puts copy((@cache_base + path), dest) ? 'Done' : 'Skipped (not found)'
   end
 
-  def load_without_overwrite(path, dest=nil)
+  def load_without_overwrite(path, dest = nil)
+    print "Loading from cache: #{path}... "
     dest ||= path
-    copy (@cache_base + path), dest, '-a -n'
+    puts copy((@cache_base + path), dest, '-a -n') ? 'Done' : 'Skipped (not found or target exists)'
   end
 
   # copy cache contents
   # @param [String] source directory
   # @param [String] destination directory
-  def copy(from, to, options='-a')
+  def copy(from, to, options = '-a')
     return false unless File.exist?(from)
+
     FileUtils.mkdir_p File.dirname(to)
     system("cp #{options} #{from}/. #{to}")
   end
@@ -59,7 +66,7 @@ class LanguagePack::Cache
   # copy contents between to places in the cache
   # @param [String] source cache directory
   # @param [String] destination directory
-  def cache_copy(from,to)
+  def cache_copy(from, to)
     copy(@cache_base + from, @cache_base + to)
   end
 
@@ -67,6 +74,6 @@ class LanguagePack::Cache
   # @param [String] relative path of the cache contents
   # @param [Boolean] true if the path exists in the cache and false if otherwise
   def exists?(path)
-    File.exists?(@cache_base + path)
+    File.exist?(@cache_base + path)
   end
 end
