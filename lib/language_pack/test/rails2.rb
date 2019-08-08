@@ -116,7 +116,14 @@ class LanguagePack::Rails2
   end
 
   def assets_folders
-    [node_modules_folder, public_assets_folder, public_packs_folder, public_packs_test_folder]
+    [
+      node_modules_folder,
+      public_assets_folder,
+      public_packs_folder,
+      public_packs_test_folder,
+      default_assets_cache,
+      webpacker_cache
+    ]
   end
 
   def public_assets_folder
@@ -131,8 +138,12 @@ class LanguagePack::Rails2
     'public/packs-test'
   end
 
-  def default_assets_cache
+  def assets_cache
     'tmp/cache/assets'
+  end
+
+  def webpacker_cache
+    'tmp/cache/webpacker'
   end
 
   def node_modules_folder
