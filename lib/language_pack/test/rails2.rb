@@ -93,7 +93,6 @@ class LanguagePack::Rails2
         topic('Preparing app for Rails asset pipeline')
 
         assets_folders.each { |a| @cache.load a }
-        @cache.load default_assets_cache
 
         precompile.invoke(env: rake_env)
 
@@ -107,7 +106,6 @@ class LanguagePack::Rails2
           cleanup_assets_cache
 
           assets_folders.each { |a| @cache.store a }
-          @cache.store default_assets_cache
         else
           precompile_fail(precompile.output)
         end
